@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Trading Report</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f4f4; color: #333; }
+        .container { background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        h1, h2 { color: #333; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #e9ecef;
+            color: #495057;
+            font-weight: bold;
+        }
+        tr:nth-child(even) { background-color: #f8f9fa; }
+        tr:hover { background-color: #e2e6ea; }
+        .summary { margin-bottom: 30px; padding: 15px; background-color: #e9f7fd; border-left: 5px solid #2196F3; }
+        .summary p { font-size: 1.1em; margin: 5px 0; }
+        .buy-signal { color: #28a745; font-weight: bold; }
+        .sell-signal { color: #dc3545; font-weight: bold; }
+        .hold-signal { color: #ffc107; font-weight: bold; }
+        footer { text-align: center; margin-top: 30px; font-size: 0.9em; color: #777; }
+        a { color: #007bff; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Trading Strategy Report</h1>
+
+        <div class="summary">
+            <h2>Summary</h2>
+            <p>Report Generated: {{ report_date }}</p>
+            <p>Total Buy Signals: <span class="buy-signal">{{ summary.buy_signals }}</span></p>
+            <p>Total Sell Signals: <span class="sell-signal">{{ summary.sell_signals }}</span></p>
+            <p>Total Hold Signals: <span class="hold-signal">{{ summary.hold_signals }}</span></p>
+            <p>Total Recommendations Analyzed: {{ summary.total_recommendations }}</p>
+        </div>
+
+        <h2>Recommendations</h2>
+        {% if recommendations %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Symbol</th>
+                    <th>Timestamp</th>
+                    <th>Signal</th>
+                    <th>Price at Signal</th>
+                    <th>Confidence Score</th>
+                    <th>Reason</th>
+                    <!-- <th>Details Link</th> -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for rec in recommendations %}
+                <tr>
+                    <td><a href="https://finance.yahoo.com/quote/{{ rec.symbol }}" target="_blank">{{ rec.symbol }}</a></td>
+                    <td>{{ rec.timestamp }}</td>
+                    <td class="{{ rec.signal_type|lower }}-signal">{{ rec.signal_type }}</td>
+                    <td>{{ "%.2f"|format(rec.price_at_signal) if rec.price_at_signal is not none else 'N/A' }}</td>
+                    <td>{{ rec.confidence_score if rec.confidence_score is not none else 'N/A' }}</td>
+                    <td>{{ rec.reason }}</td>
+                    <!-- <td>{% if rec.details_link %}<a href="{{ rec.details_link }}">Details</a>{% else %}N/A{% endif %}</td> -->
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No trading recommendations generated for the current period.</p>
+        {% endif %}
+
+        <footer>
+            <p>This report is auto-generated and intended for informational purposes only. Not financial advice.</p>
+        </footer>
+    </div>
+</body>
+</html>
+```

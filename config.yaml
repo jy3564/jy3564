@@ -1,0 +1,99 @@
+# Configuration for the Stock Trading Signal Application
+
+# API Keys - IMPORTANT: Replace placeholders with your actual keys
+api_keys:
+  polygon: "YOUR_POLYGON_API_KEY" # Or use environment variable POLYGON_API_KEY
+  # other_api: "YOUR_OTHER_KEY"
+
+# Data Fetching Parameters
+data_fetching:
+  start_date_offset_days: 180 # How many days back from today to start fetching data for daily/longer timespans
+  end_date_offset_days: 0 # Usually 0 for up to current day. Can be negative for historical runs.
+  # For intraday, specific start/end dates might be more appropriate or shorter offsets
+  intraday_start_date_offset_days: 7
+  intraday_timespan_multiplier: 5 # e.g., 5 for 5-minute bars
+  intraday_timespan_unit: "minute" # "minute", "hour"
+  daily_timespan_multiplier: 1
+  daily_timespan_unit: "day"
+  # Default timespan to use if not specified elsewhere or for general runs
+  default_timespan_multiplier: 1
+  default_timespan_unit: "day" # "day", "hour", "minute"
+  adjusted_ohlc: True
+  api_limit_per_call: 5000 # Polygon's limit for aggregates per call (max 50000)
+  # Use a higher limit like 50000 for minute data over many days.
+
+# Stock Universe Configuration
+stock_universe:
+  # List of symbols if not using Wikipedia, or as a fallback/addition
+  # manual_symbol_list: ["AAPL", "MSFT", "GOOG"]
+  use_wikipedia_scraper: True
+  sp500_url: "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies"
+  nasdaq100_url: "https://en.wikipedia.org/wiki/Nasdaq-100"
+  # max_symbols_to_process: 10 # For testing, 0 or remove for all symbols
+
+# Strategy Parameters (for StockSignalGenerator)
+# These parameters are examples and should be tuned.
+# T+0 means parameters are for generating signals based on most recent COMPLETED bar.
+strategy_params:
+  min_price_at_signal: 0.20 # Minimum price of a stock to consider generating a signal
+
+  ema:
+    short_period: 10
+    medium_period: 50
+    long_period: 200
+
+  macd:
+    fast_period: 12
+    slow_period: 26
+    signal_period: 9
+
+  bollinger_bands:
+    period: 20
+    std_dev: 2.0 # Ensure it's a float
+
+  rsi:
+    period: 14
+    overbought_threshold: 70
+    oversold_threshold: 30
+    momentum_threshold: 50 # RSI > 50 often seen as bullish
+
+  adx:
+    period: 14
+    trend_threshold: 25 # ADX > 25 indicates a trend
+
+  atr: # For ATR trailing stop info
+    period: 14
+    multiplier: 3.0
+
+  # Trend Calculator (if using SMAs, these windows apply)
+  # These might be redundant if EMAs are primary trend indicators,
+  # but trendCalculator can operate on any series (price, RSI, OBV).
+  trend_calculator_smas:
+    short_window: 10
+    medium_window: 30
+    long_window: 60
+
+  # Confidence score base and adjustments could also be here
+  confidence:
+    base_score: 500
+    # Example adjustments (can be more granular)
+    ema_trend_strong_add: 150
+    macd_cross_add: 100
+    rsi_extremes_add: 75
+    adx_strong_add: 50
+    # ... etc.
+
+# Reporting Configuration
+reporting:
+  report_filename: "trading_signals_report.html"
+  # template_name: "report_template.html" # If multiple templates
+  # output_directory: "reports/" # If always saving to a specific subdir
+
+# Application Settings
+application:
+  # Set to a small number (e.g., 5 or 10) for quick testing runs.
+  # Set to 0 or negative to process all symbols from the universe.
+  max_symbols_to_process: 5
+  # Add other app-level settings like logging configuration, etc.
+  # log_level: "INFO"
+  # log_file: "app_run.log"
