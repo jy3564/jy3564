@@ -1,0 +1,24 @@
+name = "trade-report-api"
+main = "worker/index.ts"
+compatibility_date = "2024-05-01"
+
+# Dev server configuration
+[dev]
+ip = "127.0.0.1"
+port = 8787
+local_protocol = "http"
+# This will store local R2 and other state in the .wrangler directory
+persist = true
+
+# Binding for a local D1 database.
+[[d1_databases]]
+binding = "DB" # Name to access in the Worker
+database_name = "trade-report-db-local"
+database_id = "local-db-id" # Dummy ID for local dev
+migrations_dir = "worker/migrations" # Correct way to specify migrations directory
+
+# Binding for a local R2 bucket.
+[[r2_buckets]]
+binding = "MEDIA_BUCKET" # Name to access in the Worker
+bucket_name = "trade-report-media-local"
+preview_bucket_name = "trade-report-media-local-preview" # Dummy name for local preview
