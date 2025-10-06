@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial News Client</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 2em; background-color: #f4f4f4; }
+        .container { max-width: 800px; margin: 0 auto; background-color: #fff; padding: 2em; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #333; }
+        form { display: flex; justify-content: center; margin-bottom: 2em; }
+        input[type="text"] { width: 300px; padding: 0.5em; border: 1px solid #ddd; border-radius: 4px; }
+        input[type="submit"] { padding: 0.5em 1.5em; border: none; background-color: #007BFF; color: white; border-radius: 4px; cursor: pointer; }
+        .news-article { border-bottom: 1px solid #eee; padding: 1em 0; }
+        .news-article:last-child { border-bottom: none; }
+        .news-title { font-size: 1.2em; font-weight: bold; }
+        .news-description { margin: 0.5em 0; }
+        .news-source { font-style: italic; color: #555; }
+        a { color: #007BFF; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Financial News</h1>
+        <form action="/" method="post">
+            <input type="text" name="symbols" placeholder="Enter stock symbols (e.g., AAPL,TSLA)">
+            <input type="submit" value="Search">
+        </form>
+
+        <div class="news-list">
+            {% for article in news %}
+                <div class="news-article">
+                    <h2 class="news-title"><a href="{{ article.url }}" target="_blank">{{ article.title }}</a></h2>
+                    <p class="news-description">{{ article.description }}</p>
+                    <p class="news-source">Source: {{ article.source }}</p>
+                </div>
+            {% else %}
+                <p>No news to display. Try searching for a stock symbol.</p>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
